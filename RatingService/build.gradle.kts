@@ -7,9 +7,11 @@ plugins {
 group = "com.micro.ratings"
 version = "0.0.1-SNAPSHOT"
 
+val springCloudVersion by extra("2024.0.1") // 👈 Add this
+
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion.set(JavaLanguageVersion.of(21))
 	}
 }
 
@@ -23,9 +25,17 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion") // 👈 Kotlin style
+	}
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.cloud:spring-cloud-starter") // 👈 Spring Cloud
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client") // 👈 Eureka Client
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
