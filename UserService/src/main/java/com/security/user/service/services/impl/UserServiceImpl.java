@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("Resource with the given id is not found"+" "+ userId));
 
        ResponseEntity<List<Rating>> response = restTemplate.exchange(
-               "http://localhost:8083/ratings/users/" + user.getUserId(),
+               "http://RATINGSERVICE/ratings/users/" + user.getUserId(),
                HttpMethod.GET,
                null,
                new ParameterizedTypeReference<List<Rating>>() {}
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         assert ratingList != null;
         List<Rating> ratings = ratingList.stream().peek(rating->{
-          Hotel hotel= restTemplate.getForObject("http://localhost:8082/hotels/"+rating.getHotelId(), Hotel.class);
+          Hotel hotel= restTemplate.getForObject("http://HOTELSERVICE/hotels/"+rating.getHotelId(), Hotel.class);
            rating.setHotel(hotel);
         }).toList();
 
