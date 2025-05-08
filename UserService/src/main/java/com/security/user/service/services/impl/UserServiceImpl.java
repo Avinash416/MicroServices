@@ -1,11 +1,17 @@
 package com.security.user.service.services.impl;
 
+import com.security.user.service.entities.Hotel;
+import com.security.user.service.entities.Rating;
 import com.security.user.service.entities.User;
 import com.security.user.service.exceptions.ResourceNotFoundException;
 import com.security.user.service.respositories.UserRepository;
 import com.security.user.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public List<User> getAllUsers() {
@@ -30,6 +39,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("Resource with the given id is not found"+" "+ userId));
+        User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("Resource with the given id is not found"+" "+ userId));
+
+       ResponseEntity<List<Rating>> response = restTemplate.exchange(
+               "http://localhost:8083/ratings/users/" + user.getUserId(),
+               HttpMethod.GET,
+               null,
+               new ParameterizedTypeReference<List<Rating>>() {}
+       );
+
+       List<Rating> ratingList = response.getBody();
+
+        assert ratingList != null;
+        List<Rating> ratings = ratingList.stream().peek(rating->{
+          Hotel hotel= restTemplate.getForObject("http://localhost:8082/hotels/"+rating.getHotelId(), Hotel.class);
+           rating.setHotel(hotel);
+        }).toList();
+
+        user.setRatings(ratings);
+        return user;
     }
 }

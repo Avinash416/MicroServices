@@ -3,6 +3,7 @@ package com.security.user.service.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.*;
 
 @Getter
@@ -19,4 +20,7 @@ public class Rating {
     private String hotelId;
     private  int rating;
     private String feedback;
+
+    @Transient
+    private Hotel hotel;
 }
