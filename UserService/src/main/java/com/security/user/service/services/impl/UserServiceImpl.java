@@ -4,6 +4,7 @@ import com.security.user.service.entities.Hotel;
 import com.security.user.service.entities.Rating;
 import com.security.user.service.entities.User;
 import com.security.user.service.exceptions.ResourceNotFoundException;
+import com.security.user.service.external_services.HotelService;
 import com.security.user.service.respositories.UserRepository;
 import com.security.user.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private HotelService hotelService;
 
     @Override
     public List<User> getAllUsers() {
@@ -52,7 +56,8 @@ public class UserServiceImpl implements UserService {
 
         assert ratingList != null;
         List<Rating> ratings = ratingList.stream().peek(rating->{
-          Hotel hotel= restTemplate.getForObject("http://HOTELSERVICE/hotels/"+rating.getHotelId(), Hotel.class);
+//          Hotel hotel= restTemplate.getForObject("http://HOTELSERVICE/hotels/"+rating.getHotelId(), Hotel.class);
+            Hotel hotel = hotelService.getHotel(rating.getHotelId());
            rating.setHotel(hotel);
         }).toList();
 
