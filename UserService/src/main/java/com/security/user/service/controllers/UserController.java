@@ -2,6 +2,7 @@ package com.security.user.service.controllers;
 
 import com.security.user.service.entities.User;
 import com.security.user.service.services.UserService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +23,19 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    //With the help of circuit breaker we can handle the exception and provide a fallback method in case of any failure.
+    @CircuitBreaker(name ="ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
     public ResponseEntity<User> getUser(@PathVariable String userId){
         User user = userService.getUserById(userId);
          return ResponseEntity.ok(user);
+    }
+
+    //fallback method for ratingHotelBreaker
+    //This method will be called when the above getUser() method fails.
+    //Always make sure that this method has same parameters and return type as the actual method.
+    public ResponseEntity<User> ratingHotelFallback(String userId, Exception ex){
+     User user= User.builder().userId("23e213r2").name("Default Name").email("default@gmail.com").about("default about").build();
+     return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @GetMapping
