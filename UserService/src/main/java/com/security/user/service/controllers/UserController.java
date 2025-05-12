@@ -3,6 +3,8 @@ package com.security.user.service.controllers;
 import com.security.user.service.entities.User;
 import com.security.user.service.services.UserService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,14 @@ public class UserController {
 
     @GetMapping("/{userId}")
     //With the help of circuit breaker we can handle the exception and provide a fallback method in case of any failure.
-    @CircuitBreaker(name ="ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+//    @CircuitBreaker(name ="ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+
+//    @Retry(name = "ratingHotelService", fallbackMethod = "ratingHotelFallback")
+    //with the help of retry annotation we can handle the retry logic and provide a fallback method in case of any failure.
+
+    @RateLimiter(name="userRateLimiter", fallbackMethod = "ratingHotelFallback")
+    //with the help of rate limiter we can limit the number of requests to a particular service.
+    //which will help in security and performance.
     public ResponseEntity<User> getUser(@PathVariable String userId){
         User user = userService.getUserById(userId);
          return ResponseEntity.ok(user);
