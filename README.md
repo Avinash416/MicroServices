@@ -81,11 +81,11 @@ Use environment variables for sensitive data (e.g., OKTA credentials).
 Option 1: IDE Setup
 In IntelliJ or Eclipse:
 Go to Run > Edit Configurations
-Add environment variables in the Environment variables field:
+Add environment variables in the Environment variables field for each service:
 ```
-OKTA_ISSUER_URI=https://your-okta/oauth2/default
-OKTA_CLIENT_ID=your-client-id
-OKTA_CLIENT_SECRET=your-client-secret
+USERSERVICE_DB_URL=something url
+USERSERVICE_DB_USERNAME=abcd
+USERSERVICE_DB_PASSWORD=something
 ```
 
 </br>
@@ -96,9 +96,9 @@ Create a .env file in the root or each service folder:
 
 env
 ```
-OKTA_ISSUER_URI=https://your-okta-domain/oauth2/default
-OKTA_CLIENT_ID=your-client-id
-OKTA_CLIENT_SECRET=your-client-secret
+USERSERVICE_DB_URL=something url
+USERSERVICE_DB_USERNAME=abcd
+USERSERVICE_DB_PASSWORD=something
 ```
 
 Use a Gradle plugin like env file to automatically read it, or configure your shell to export them before running:
@@ -106,8 +106,22 @@ Use a Gradle plugin like env file to automatically read it, or configure your sh
 source .env
 ```
 
-
 </br>
+
+🔐 Security and Authentication
+
+- This project uses OAuth2 authentication via Okta to secure service endpoints.
+- Okta Integration: Configured using Spring Security's OAuth2 client support.
+- Environment Variables: Authentication details like OKTA_ISSUER_URI and OKTA_CLIENT_ID are provided via environment variables.
+- Protected Routes: Microservices endpoints are secured and require valid OAuth2 tokens.
+
+⚠️ Make sure you set the required environment variables before running the services.
+
+```
+OKTA_ISSUER_URI=https://dev-xxxxxx.okta.com/oauth2/default
+OKTA_CLIENT_ID=your-okta-client-id
+OKTA_CLIENT_SECRET=your-okta-client-secret
+```
 
 🌐 Endpoints
 
@@ -117,5 +131,3 @@ GET http://localhost:8084/users
 GET http://localhost:8084/hotels
 GET http://localhost:8084/ratings
 ```
-
-
