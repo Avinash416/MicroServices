@@ -13,7 +13,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -43,13 +42,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("Resource with the given id is not found"+" "+ userId));
 
-       ResponseEntity<List<Rating>> response = restTemplate.exchange(
+        User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("Resource with the given id is not found"+" "+ userId));
+        ResponseEntity<List<Rating>> response = restTemplate.exchange(
                "http://RATINGSERVICE/ratings/users/" + user.getUserId(),
                HttpMethod.GET,
                null,
-               new ParameterizedTypeReference<List<Rating>>() {}
+               new ParameterizedTypeReference<>() {
+               }
        );
 
        List<Rating> ratingList = response.getBody();
