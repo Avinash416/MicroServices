@@ -36,6 +36,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.cloud:spring-cloud-starter")
 	implementation ("org.springframework.cloud:spring-cloud-starter-config")
+	implementation ("org.springframework.boot:spring-boot-starter-security")
+	implementation ("com.okta.spring:okta-spring-boot-starter:3.0.7")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client") // 👈 Eureka Client
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
