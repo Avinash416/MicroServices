@@ -1,4 +1,4 @@
-# MicroService
+# MicroServices
 
 A complete microservices architecture built using Spring Boot, Spring Cloud, Eureka, Config Server, and API Gateway, using Gradle for build and dependency management. This system demonstrates modular microservices communicating securely with centralized configuration and service discovery.
 
