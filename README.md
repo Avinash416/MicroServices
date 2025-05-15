@@ -104,7 +104,6 @@ OKTA_CLIENT_SECRET=your-client-secret
 Use a Gradle plugin like env file to automatically read it, or configure your shell to export them before running:
 ```
 source .env
-
 ```
 
 
