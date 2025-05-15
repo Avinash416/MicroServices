@@ -1,0 +1,23 @@
+server:
+   port: ${HOTELSERVICE_PORT}
+
+spring:
+  datasource:
+    url: ${HOTELSERVICE_DB_URL}
+    username: ${HOTELSERVICE_DB_USERNAME}
+    password: ${HOTELSERVICE_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  config:
+    import: optional:configserver:http://localhost:${SERVERCONFUGURATION_PORT}
+
+
+okta:
+  oAuth2:
+    issuer: ${OKTA_ISSUER_URI}
+    audience: ${OKTA_AUDIENCE}

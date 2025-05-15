@@ -1,0 +1,16 @@
+server:
+   port: ${RATINGSERVICE_PORT}
+
+spring:
+  data:
+    mongodb:
+      url: ${RATINGSERVICE_DB_URL}
+      database: ${RATINGSERVICE_DB}
+
+  config:
+    import: optional:configserver:http://localhost:${SERVERCONFUGURATION_PORT}
+
+okta:
+  oAuth2:
+    issuer: ${OKTA_ISSUER_URI}
+    audience: ${OKTA_AUDIENCE}

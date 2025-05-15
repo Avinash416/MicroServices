@@ -1,0 +1,31 @@
+server:
+  port: ${APIGATEWAY_PORT}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: USERSERVICE
+          uri: lb://USERSERVICE  #lb is load balancer
+          predicates:
+            - Path=/users/** #path to be matched for routing
+            #if other routes has to be match just give comma and write the other paths
+            #- Path=/users/**, /roles/**
+
+        - id: HOTELSERVICE
+          uri: lb://HOTELSERVICE
+          predicates:
+            - Path=/hotels/**
+
+        - id: RATINGSERVICE
+          uri: lb://RATINGSERVICE
+          predicates:
+            - Path=/ratings/**
+
+okta:
+  oAuth2:
+    issuer: ${OKTA_ISSUER_URI}
+    audience: ${OKTA_AUDIENCE}
+    client-id: ${OKTA_CLIENT_ID}
+    client-secret: ${OKTA_CLIENT_SECRET}
+    scopes: openid, profile, email, offline_access
