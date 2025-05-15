@@ -83,9 +83,9 @@ In IntelliJ or Eclipse:
 Go to Run > Edit Configurations
 Add environment variables in the Environment variables field for each service:
 ```
-USERSERVICE_DB_URL=something url
-USERSERVICE_DB_USERNAME=abcd
-USERSERVICE_DB_PASSWORD=something
+USERSERVICE_DB_URL=your-db-url
+USERSERVICE_DB_USERNAME=your-db-username
+USERSERVICE_DB_PASSWORD=your-db-password
 ```
 
 </br>
@@ -96,9 +96,9 @@ Create a .env file in the root or each service folder:
 
 env
 ```
-USERSERVICE_DB_URL=something url
-USERSERVICE_DB_USERNAME=abcd
-USERSERVICE_DB_PASSWORD=something
+USERSERVICE_DB_URL=your-db-url
+USERSERVICE_DB_USERNAME=your-db-username
+USERSERVICE_DB_PASSWORD=your-db-password
 ```
 
 Use a Gradle plugin like env file to automatically read it, or configure your shell to export them before running:
