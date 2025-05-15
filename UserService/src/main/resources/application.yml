@@ -1,0 +1,88 @@
+server:
+   port: ${USERSERVICE_PORT}
+
+spring:
+  datasource:
+    url: ${USERSERVICE_DB_URL}
+    username: ${USERSERVICE_DB_USERNAME}
+    password: ${USERSERVICE_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+#Fetch configuration form the GitHub repository
+  config:
+    import: optional:configserver:http://localhost:${SERVERCONFUGURATION_PORT}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OKTA_ISSUER_URI}
+      client:
+        registration:
+           my-internal-client:
+              provider: okta
+              authorization-grant-type: client_credentials
+              scope: internal
+              client-id: ${OKTA_CLIENT_ID}
+              client-secret: ${OKTA_CLIENT_SECRET}
+
+        provider:
+          okta:
+            issuer-uri: ${OKTA_ISSUER_URI}
+
+
+#Enable Circuit breakers first
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+
+#Add fault tolerance with resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+#      Register the instance of circuit breaker named 'ratingHotelBreaker'
+      ratingHotelBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 100
+        slidingWindowType: COUNT_BASED
+
+#Retry mechanism for the circuit breaker
+  retry:
+    instances:
+      ratingHotelService:
+        maxAttempts: 3
+        waitDuration: 5s
+
+ #Rate Limiter
+  ratelimiter:
+     instances:
+       userRateLimiter:
+         limit-refresh-period: 4s
+         limit-for-period: 2
+         timeout-duration: 2s
+
+okta:
+  oAuth2:
+    issuer: ${OKTA_ISSUER_URI}
+    audience: ${OKTA_AUDIENCE}
